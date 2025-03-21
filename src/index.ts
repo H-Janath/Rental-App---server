@@ -5,6 +5,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import tenantRoute from './route/tenantRoute'
+import managerRoute from './route/managerRoute';
 import { authMiddleware } from './middleware/authMiddleware';
 // ROUTE IMPORT
 
@@ -22,7 +23,10 @@ app.use(cors());
 app.get('/',authMiddleware(['manager']),(req,res)=>{
     res.send("This is home route")
 })
+
 app.use('/tenants',authMiddleware(['tenant']),tenantRoute);
+app.use('/managers',authMiddleware(['manager']),managerRoute);
+
 // SERVER
 const port = process.env.PORT || 3001;
 app.listen(port,()=>{
