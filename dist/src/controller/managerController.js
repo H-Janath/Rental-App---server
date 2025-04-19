@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createManager = exports.getManager = void 0;
+exports.createManager = exports.updateManager = exports.getManager = void 0;
 const client_1 = require("@prisma/client");
 const prisma = new client_1.PrismaClient();
 const getManager = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -30,9 +30,28 @@ const getManager = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     }
 });
 exports.getManager = getManager;
+const updateManager = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { cognitoId } = req.params;
+        const { name, email, phoneNumber } = req.body;
+        const updateManager = yield prisma.manager.update({
+            where: { cognitoId },
+            data: {
+                name,
+                email,
+                phoneNumber
+            }
+        });
+        res.status(201).json(updateManager);
+    }
+    catch (error) {
+        res.status(500).json({ message: `Error upating manager : ${error.message}` });
+    }
+});
+exports.updateManager = updateManager;
 const createManager = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { cognitoId, name, email, phoneNumber } = req.params;
+        const { cognitoId, name, email, phoneNumber } = req.body;
         const manager = yield prisma.manager.create({
             data: {
                 cognitoId,
